@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Credit Score Classification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            text-align: center;
+            padding-top: 30px;
+        }
+
+        .container {
+            width: 430px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.15);
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        select, button {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+
+        .result-text {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .gauge-wrap {
+            width: 260px;
+            margin: 0 auto;
+        }
+
+        .gauge {
+            width: 260px;
+            height: 130px;
+            border-top-left-radius: 260px;
+            border-top-right-radius: 260px;
+            overflow: hidden;
+            position: relative;
+            background: conic-gradient(
+                from 180deg,
+                red 0deg 60deg,
+                orange 60deg 120deg,
+                green 120deg 180deg
+            );
+        }
+
+        .gauge::before {
+            content: "";
+            position: absolute;
+            left: 30px;
+            top: 30px;
+            width: 200px;
+            height: 100px;
+            background: white;
+            border-top-left-radius: 200px;
+            border-top-right-radius: 200px;
+        }
+
+        .needle {
+            width: 6px;
+            height: 100px;
+            background: #222;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform-origin: bottom center;
+            border-radius: 10px;
+        }
+
+        .needle::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: -7px;
+            width: 20px;
+            height: 20px;
+            background: #222;
+            border-radius: 50%;
+        }
+
+        .poor-needle {
+            transform: translateX(-50%) rotate(-60deg);
+        }
+
+        .average-needle {
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        .good-needle {
+            transform: translateX(-50%) rotate(60deg);
+        }
+
+        .labels {
+            display: flex;
+            justify-content: space-between;
+            width: 260px;
+            margin: 8px auto 0;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .poor-color { color: red; }
+        .average-color { color: orange; }
+        .good-color { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Credit Score Classification</h2>
+
+        <form action="/predict" method="post">
+            <select name="income" required>
+                <option value="">Select Income</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+
+            <select name="loan_amount" required>
+                <option value="">Select Loan Amount</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+
+            <select name="payment_history" required>
+                <option value="">Select Payment History</option>
+                <option value="Good">Good</option>
+                <option value="Average">Average</option>
+                <option value="Bad">Bad</option>
+            </select>
+
+            <select name="age" required>
+                <option value="">Select Age Group</option>
+                <option value="Young">Young</option>
+                <option value="Middle">Middle</option>
+                <option value="Old">Old</option>
+            </select>
+
+            <button type="submit">Predict Credit Score</button>
+        </form>
+
+        {% if prediction_text %}
+        <div class="result-box">
+            <div class="result-text">{{ prediction_text }}</div>
+
+            <div class="gauge-wrap">
+                <div class="gauge">
+                    {% if prediction_text == "Credit Score: Poor" %}
+                        <div class="needle poor-needle"></div>
+                    {% elif prediction_text == "Credit Score: Average" %}
+                        <div class="needle average-needle"></div>
+                    {% elif prediction_text == "Credit Score: Good" %}
+                        <div class="needle good-needle"></div>
+                    {% endif %}
+                </div>
+
+                <div class="labels">
+                    <span class="poor-color">Poor</span>
+                    <span class="average-color">Average</span>
+                    <span class="good-color">Good</span>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
